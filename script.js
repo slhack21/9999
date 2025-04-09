@@ -1,23 +1,28 @@
-// script.js - No complex JS needed for this version yet.
-// Basic interactivity (like the fade-in animation) is handled by CSS.
+document.addEventListener("DOMContentLoaded", () => {
+  const menuToggle = document.getElementById("menu-toggle");
+  const closeMenu = document.getElementById("close-menu");
+  const sideMenu = document.getElementById("side-menu");
+  const loginLink = document.getElementById("login-link");
 
-// You could add more complex features here later, e.g.,
-// - A form submission handler
-// - A dynamic service list
-// - Image sliders/carousels
+  menuToggle?.addEventListener("click", () => sideMenu.classList.add("active"));
+  closeMenu?.addEventListener("click", () => sideMenu.classList.remove("active"));
 
-console.log("IHL Réparation website loaded.");
-
-// Example: Add subtle hover effect to service list items
-document.addEventListener('DOMContentLoaded', () => {
-    const serviceItems = document.querySelectorAll('#services li');
-    serviceItems.forEach(item => {
-        item.addEventListener('mouseover', () => {
-            item.style.color = 'var(--primary-color)'; // Change text color on hover
-        });
-        item.addEventListener('mouseout', () => {
-            item.style.color = 'var(--text-color)'; // Revert text color
-        });
-    });
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      loginLink.textContent = "Déconnexion";
+      loginLink.href = "#";
+      loginLink.onclick = () => firebase.auth().signOut().then(() => location.reload());
+    } else {
+      loginLink.textContent = "Connexion";
+      loginLink.href = "login.html";
+    }
+  });
 });
 
+function toggleDarkMode() {
+  const icon = document.getElementById("theme-icon");
+  document.body.classList.toggle("dark-mode");
+  if (icon) {
+    icon.src = document.body.classList.contains("dark-mode") ? "sun.png" : "moon.png";
+  }
+}
